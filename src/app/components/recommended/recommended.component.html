@@ -1,0 +1,33 @@
+<div class="recommended-container">
+    <h2>Recommended Recipes For You</h2>
+    <p class="subheading">Based on your preferences and popular recipes</p>
+    
+    <div class="recipe-grid" *ngIf="recommendedRecipes.length > 0">
+      <div class="recipe-card" *ngFor="let recipe of recommendedRecipes" (click)="viewRecipeDetails(recipe.id)">
+        <div class="recipe-image">
+          <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
+        </div>
+        <div class="recipe-info">
+          <h3 class="recipe-name">{{recipe.name}}</h3>
+          <div class="recipe-category">{{recipe.category}}</div>
+          <div class="recipe-meta">
+            <span class="cooking-time">{{recipe.cookingTime}} min</span>
+            <span class="difficulty">{{recipe.difficultyLevel}}</span>
+          </div>
+          <div class="recipe-rating">
+            <div class="stars">
+              <ng-container *ngFor="let star of [1,2,3,4,5]">
+                <span class="star" [class.filled]="star <= recipe.rating">★</span>
+              </ng-container>
+            </div>
+            <span class="rating-count">{{recipe.ratingCount}} ratings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-recipes" *ngIf="recommendedRecipes.length === 0">
+      <p>We don't have any recommendations for you yet.</p>
+      <p>Try exploring more recipes or updating your preferences.</p>
+    </div>
+  </div>

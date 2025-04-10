@@ -1,0 +1,207 @@
+<div class="recipe-detail-container" *ngIf="recipe">
+    <!-- View Mode -->
+    <div class="recipe-content" *ngIf="!isEditing">
+      <div class="recipe-header">
+        <div class="recipe-image">
+          <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
+        </div>
+        
+        <div class="recipe-info">
+          <h1 class="recipe-name">{{recipe.name}}</h1>
+          
+          <div class="recipe-meta">
+            <div class="meta-item">
+              <span class="meta-label">Cuisine type:</span>
+              <span class="meta-value">{{recipe.cuisine}}</span>
+            </div>
+            
+            <div class="meta-item">
+              <span class="meta-label">Category:</span>
+              <span class="meta-value">{{recipe.category}}</span>
+            </div>
+            
+            <div class="meta-row">
+              <div class="meta-item">
+                <span class="meta-label">Difficulty level:</span>
+                <span class="meta-value">{{recipe.difficultyLevel}}</span>
+              </div>
+              
+              <div class="meta-item">
+                <span class="meta-label">Time taken:</span>
+                <span class="meta-value">{{recipe.cookingTime}} min</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="recipe-description">
+        <h3>Description</h3>
+        <div class="description-content">
+          <p *ngIf="!recipe.steps || recipe.steps.length === 0">{{recipe.description}}</p>
+          <ol *ngIf="recipe.steps && recipe.steps.length > 0">
+            <li *ngFor="let step of recipe.steps">{{step}}</li>
+          </ol>
+        </div>
+      </div>
+      
+      <div class="recipe-tags">
+        <h3>Tags</h3>
+        <div class="tags-container">
+          <span class="tag" *ngFor="let tag of recipe.tags">{{tag}}</span>
+          <span *ngIf="!recipe.tags || recipe.tags.length === 0">No tags</span>
+        </div>
+      </div>
+      
+      <div class="recipe-ingredients">
+        <h3>Ingredients</h3>
+        <div class="ingredients-container">
+          <span class="ingredient" *ngFor="let ingredient of recipe.ingredients">{{ingredient}}</span>
+          <span *ngIf="!recipe.ingredients || recipe.ingredients.length === 0">No ingredients listed</span>
+        </div>
+      </div>
+      
+      <div class="recipe-restrictions" *ngIf="recipe.dietaryRestrictions">
+        <h3>Dietary restrictions</h3>
+        <p>{{recipe.dietaryRestrictions}}</p>
+      </div>
+      
+      <div class="recipe-actions">
+        <div class="owner-actions" *ngIf="isOwner">
+          <button class="btn edit-btn" (click)="toggleEdit()">UPDATE</button>
+          <button class="btn delete-btn" (click)="deleteRecipe()">DELETE</button>
+        </div>
+        
+        <div class="user-actions" *ngIf="!isOwner">
+          <button class="btn favorite-btn" [class.favorited]="isFavorite" (click)="toggleFavorite()">
+            {{isFavorite ? 'REMOVE FROM FAVORITES' : 'ADD TO FAVORITES'}}
+          </button>
+        </div>
+      </div>
+      
+      <div class="recipe-comments">
+        <h3>Comments</h3>
+        
+        <div class="comment-form">
+          <textarea placeholder="Add a comment..." [(ngModel)]="newComment" class="comment-input"></textarea>
+          <button class="btn comment-btn" (click)="addComment()">Post Comment</button>
+        </div>
+        
+        <div class="comments-list">
+          <div class="comment" *ngFor="let comment of comments">
+            <div class="comment-header">
+              <div class="comment-user">
+                <img src="assets/default-profile.png" alt="User" class="user-avatar">
+                <span class="username">{{comment.username}}</span>
+              </div>
+              <div class="comment-rating">
+                <span class="star" *ngFor="let star of [1,2,3,4,5]" [class.filled]="star <= comment.rating">★</span>
+              </div>
+            </div>
+            <div class="comment-text">{{comment.text}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Mode -->
+    <div class="recipe-edit" *ngIf="isEditing">
+      <h2 class="edit-title">Edit Recipe</h2>
+      
+      <div class="form-row">
+        <div class="form-group recipe-name">
+          <label>Recipe Name</label>
+          <input type="text" [(ngModel)]="editableRecipe.name" class="form-control">
+        </div>
+        
+        <div class="form-group image-upload">
+          <label>Recipe Image</label>
+          <div class="upload-btn" (click)="triggerFileInput()">
+            <span>Change Image</span>
+            <span class="upload-icon">⬆</span>
+          </div>
+          <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept="image/*">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <div class="image-preview">
+          <img [src]="imagePreviewUrl || editableRecipe.imageUrl" alt="Recipe preview" onerror="this.src='assets/recipe-placeholder.jpg'">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Description</label>
+        <textarea [(ngModel)]="editableRecipe.description" class="form-control description-textarea" rows="6"></textarea>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Cuisine Type</label>
+          <select [(ngModel)]="editableRecipe.cuisine" class="form-control">
+            <option *ngFor="let cuisine of cuisineOptions" [value]="cuisine">{{cuisine}}</option>
+          </select>
+        </div>
+        
+        <div class="form-group half">
+          <label>Category</label>
+          <select [(ngModel)]="editableRecipe.category" class="form-control">
+            <option *ngFor="let category of categoryOptions" [value]="category">{{category}}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Tags</label>
+        <div class="tag-input-container">
+          <input type="text" placeholder="Add a tag..." [(ngModel)]="newTag" class="form-control" (keyup.enter)="addTag()">
+          <button class="add-btn" (click)="addTag()">+</button>
+        </div>
+        <div class="tags-container" *ngIf="editableRecipe.tags && editableRecipe.tags.length > 0">
+          <span class="tag" *ngFor="let tag of editableRecipe.tags">
+            {{tag}} <span class="remove-tag" (click)="removeTag(tag)">×</span>
+          </span>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Ingredients</label>
+        <div class="tag-input-container">
+          <input type="text" placeholder="Add an ingredient..." [(ngModel)]="newIngredient" class="form-control" (keyup.enter)="addIngredient()">
+          <button class="add-btn" (click)="addIngredient()">+</button>
+        </div>
+        <div class="tags-container" *ngIf="editableRecipe.ingredients && editableRecipe.ingredients.length > 0">
+          <span class="tag ingredient-tag" *ngFor="let ingredient of editableRecipe.ingredients">
+            {{ingredient}} <span class="remove-tag" (click)="removeIngredient(ingredient)">×</span>
+          </span>
+        </div>
+      </div>
+      
+      <div class="form-row">
+        <div class="form-group half">
+          <label>Cooking Time (minutes)</label>
+          <div class="cooking-time-input">
+            <input type="number" [(ngModel)]="editableRecipe.cookingTime" class="form-control" min="1">
+            <span class="time-unit">min</span>
+          </div>
+        </div>
+        
+        <div class="form-group half">
+          <label>Difficulty Level</label>
+          <select [(ngModel)]="editableRecipe.difficultyLevel" class="form-control">
+            <option *ngFor="let difficulty of difficultyOptions" [value]="difficulty">{{difficulty}}</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Dietary Restrictions</label>
+        <input type="text" [(ngModel)]="editableRecipe.dietaryRestrictions" class="form-control">
+      </div>
+      
+      <div class="form-actions">
+        <button class="btn save-btn" (click)="updateRecipe()">Save Changes</button>
+        <button class="btn cancel-btn" (click)="cancelEdit()">Cancel</button>
+      </div>
+    </div>
+  </div>

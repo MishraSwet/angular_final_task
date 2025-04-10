@@ -1,0 +1,103 @@
+<div class="preferences-container">
+    <h2>Your Preferences</h2>
+    <p class="subheading">Customize your cookbook experience</p>
+    
+    <div class="preferences-form">
+      <div class="preference-section">
+        <h3>Favorite Cuisines</h3>
+        <p>Select the cuisines you enjoy the most</p>
+        <div class="cuisine-options">
+          <div 
+            *ngFor="let cuisine of cuisines" 
+            class="cuisine-option" 
+            [class.selected]="preferences.favoriteCuisines.includes(cuisine)"
+            (click)="toggleCuisine(cuisine)">
+            {{cuisine}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="preference-section">
+        <h3>Dietary Restrictions</h3>
+        <p>Select any dietary restrictions you have</p>
+        <div class="dietary-options">
+          <div 
+            *ngFor="let option of dietaryOptions" 
+            class="dietary-option" 
+            [class.selected]="preferences.dietaryRestrictions.includes(option)"
+            (click)="toggleDietaryRestriction(option)">
+            {{option}}
+          </div>
+        </div>
+      </div>
+      
+      <div class="preference-section">
+        <h3>Cooking Time Preference</h3>
+        <p>How much time do you typically have for cooking?</p>
+        <div class="radio-options">
+          <div class="radio-option">
+            <input type="radio" id="any-time" name="cookingTime" value="any" [(ngModel)]="preferences.cookingTimePreference">
+            <label for="any-time">Any time</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="quick" name="cookingTime" value="quick" [(ngModel)]="preferences.cookingTimePreference">
+            <label for="quick">Quick meals (under 30 min)</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="medium" name="cookingTime" value="medium" [(ngModel)]="preferences.cookingTimePreference">
+            <label for="medium">Medium (30-60 min)</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="elaborate" name="cookingTime" value="elaborate" [(ngModel)]="preferences.cookingTimePreference">
+            <label for="elaborate">Elaborate meals (over 60 min)</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="preference-section">
+        <h3>Difficulty Preference</h3>
+        <p>What level of cooking difficulty do you prefer?</p>
+        <div class="radio-options">
+          <div class="radio-option">
+            <input type="radio" id="any-difficulty" name="difficulty" value="any" [(ngModel)]="preferences.difficultyPreference">
+            <label for="any-difficulty">Any difficulty</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="easy" name="difficulty" value="easy" [(ngModel)]="preferences.difficultyPreference">
+            <label for="easy">Easy recipes</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="medium-difficulty" name="difficulty" value="medium" [(ngModel)]="preferences.difficultyPreference">
+            <label for="medium-difficulty">Medium difficulty</label>
+          </div>
+          <div class="radio-option">
+            <input type="radio" id="challenging" name="difficulty" value="challenging" [(ngModel)]="preferences.difficultyPreference">
+            <label for="challenging">Challenging recipes</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="preference-section">
+        <h3>Notification Preferences</h3>
+        <p>Choose what notifications you want to receive</p>
+        <div class="checkbox-options">
+          <div class="checkbox-option">
+            <input type="checkbox" id="new-recipes" [(ngModel)]="preferences.notificationPreferences.newRecipes">
+            <label for="new-recipes">New recipes that match your preferences</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="checkbox" id="comments" [(ngModel)]="preferences.notificationPreferences.comments">
+            <label for="comments">Comments on your recipes</label>
+          </div>
+          <div class="checkbox-option">
+            <input type="checkbox" id="favorites" [(ngModel)]="preferences.notificationPreferences.favorites">
+            <label for="favorites">When someone favorites your recipe</label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button class="save-btn" (click)="savePreferences()">Save Preferences</button>
+      </div>
+    </div>
+  </div>

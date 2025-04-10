@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Recipe } from '../models/recipe.model';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid'; // You might need to install this: npm install uuid
 
 @Injectable({
   providedIn: 'root'
@@ -8,55 +8,62 @@ import { v4 as uuidv4 } from 'uuid';
 export class RecipeService {
   private readonly STORAGE_KEY = 'recipes';
 
-  constructor() {
-    if (!localStorage.getItem(this.STORAGE_KEY)) {
-      localStorage.setItem(this.STORAGE_KEY, JSON.stringify([]));
-    }
-  }
+  constructor() { }
 
   getAllRecipes(): Recipe[] {
-    return JSON.parse(localStorage.getItem(this.STORAGE_KEY) || '[]');
+    const recipes = localStorage.getItem(this.STORAGE_KEY);
+    return recipes ? JSON.parse(recipes) : [];
   }
 
-  getRecipeById(id: string): Recipe | undefined {
+  getRecipeById(id: string): Recipe | null {
     const recipes = this.getAllRecipes();
-    return recipes.find(recipe => recipe.id === id);
+    return recipes.find(recipe => recipe.id === id) || null;
   }
 
-  getRecipesByUser(userId: string): Recipe[] {
+  getUserRecipes(userId: string): Recipe[] {
     const recipes = this.getAllRecipes();
     return recipes.filter(recipe => recipe.userId === userId);
   }
 
-  getFavoriteRecipes(favoriteIds: string[]): Recipe[] {
-    const recipes = this.getAllRecipes();
-    return recipes.filter(recipe => favoriteIds.includes(recipe.id));
-  }
-
   addRecipe(recipe: Recipe): string {
     const recipes = this.getAllRecipes();
-    const newRecipe = {
-      ...recipe,
-      id: uuidv4(),
-      rating: 0,
-      ratingCount: 0,
-      createdAt: new Date()
-    };
     
-    recipes.push(newRecipe);
+    // Generate ID if not provided
+    if (!recipe.id) {
+      recipe.id = uuidv4();
+    }
+    
+    // Set creation date if not provided
+    if (!recipe.createdAt) {
+      recipe.createdAt = new Date();
+    }
+    
+    // Initialize rating if not provided
+    if (recipe.rating === undefined) {
+      recipe.rating = 0;
+    }
+    
+    // Initialize rating count if not provided
+    if (recipe.ratingCount === undefined) {
+      recipe.ratingCount = 0;
+    }
+    
+    recipes.push(recipe);
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(recipes));
-    return newRecipe.id;
+    
+    return recipe.id;
   }
 
-  updateRecipe(recipe: Recipe): boolean {
+  updateRecipe(updatedRecipe: Recipe): boolean {
     const recipes = this.getAllRecipes();
-    const index = recipes.findIndex(r => r.id === recipe.id);
+    const index = recipes.findIndex(recipe => recipe.id === updatedRecipe.id);
     
     if (index !== -1) {
-      recipes[index] = recipe;
+      recipes[index] = updatedRecipe;
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(recipes));
       return true;
     }
+    
     return false;
   }
 
@@ -68,49 +75,23 @@ export class RecipeService {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filteredRecipes));
       return true;
     }
+    
     return false;
   }
 
-  rateRecipe(id: string, rating: number): boolean {
-    const recipe = this.getRecipeById(id);
-    if (recipe) {
-      const totalRating = recipe.rating * recipe.ratingCount;
-      recipe.ratingCount += 1;
-      recipe.rating = (totalRating + rating) / recipe.ratingCount;
-      return this.updateRecipe(recipe);
-    }
-    return false;
-  }
-
-  filterRecipes(category?: string, cuisine?: string, cookingTime?: number, difficulty?: string): Recipe[] {
-    let recipes = this.getAllRecipes();
+  searchRecipes(query: string): Recipe[] {
+    if (!query.trim()) return this.getAllRecipes();
     
-    if (category) {
-      recipes = recipes.filter(r => r.category === category);
-    }
+    query = query.toLowerCase();
+    const recipes = this.getAllRecipes();
     
-    if (cuisine) {
-      recipes = recipes.filter(r => r.cuisine === cuisine);
-    }
-    
-    if (cookingTime) {
-      recipes = recipes.filter(r => r.cookingTime <= cookingTime);
-    }
-    
-    if (difficulty) {
-      recipes = recipes.filter(r => r.difficultyLevel === difficulty);
-    }
-    
-    return recipes;
-  }
-
-  sortRecipes(recipes: Recipe[], sortBy: 'popularity' | 'latest'): Recipe[] {
-    if (sortBy === 'popularity') {
-      return [...recipes].sort((a, b) => b.rating - a.rating);
-    } else {
-      return [...recipes].sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-    }
+    return recipes.filter(recipe => 
+      recipe.name.toLowerCase().includes(query) ||
+      recipe.description.toLowerCase().includes(query) ||
+      recipe.cuisine.toLowerCase().includes(query) ||
+      recipe.category.toLowerCase().includes(query) ||
+      recipe.ingredients.some(i => i.toLowerCase().includes(query)) ||
+      (recipe.tags && recipe.tags.some(t => t.toLowerCase().includes(query)))
+    );
   }
 }

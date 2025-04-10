@@ -1,106 +1,189 @@
-<header class="header">
-  <div class="header-left">
-    <button class="nav-toggle" (click)="toggleNav()">
-      <span class="menu-icon">☰</span>
-    </button>
-    <div class="logo">LOGO</div>
+<header class="main-header">
+  <div class="header-container">
+    <div class="header-left">
+      <button class="menu-btn" (click)="toggleNav()">
+        <span class="menu-icon">☰</span>
+      </button>
+      <div class="logo" routerLink="/">
+        <img src="assets/logo.png" alt="Cookbook Logo">
+        <span class="logo-text">Cookbook</span>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="search-container">
+        <input type="text" placeholder="Search recipes..." class="search-input">
+        <button class="search-btn">
+          <span class="search-icon">🔍</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="header-right">
+      <ng-container *ngIf="!currentUser">
+        <button class="login-btn" (click)="openLoginModal()">Login</button>
+        <button class="register-btn" (click)="openRegisterModal()">Register</button>
+      </ng-container>
+      
+      <ng-container *ngIf="currentUser">
+        <div class="profile-container">
+          <button class="profile-btn" (click)="toggleProfileDropdown()">
+            <img [src]="currentUser.profileImage || 'assets/default-profile.png'" alt="Profile" class="profile-img">
+            <span class="profile-name">{{ currentUser.firstName }}</span>
+          </button>
+          
+          <div class="profile-dropdown" *ngIf="showProfileDropdown">
+            <div class="dropdown-header">
+              <img [src]="currentUser.profileImage || 'assets/default-profile.png'" alt="Profile" class="dropdown-profile-img">
+              <div class="dropdown-user-info">
+                <div class="dropdown-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</div>
+                <div class="dropdown-email">{{ currentUser.email }}</div>
+              </div>
+            </div>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" (click)="navigateToProfile()">
+              <span class="dropdown-icon">👤</span>
+              <span>My Profile</span>
+            </button>
+            <button class="dropdown-item" (click)="navigateToSettings()">
+              <span class="dropdown-icon">⚙️</span>
+              <span>Settings</span>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item logout" (click)="logout()">
+              <span class="dropdown-icon">🚪</span>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
   
-  <div class="search-container">
-    <input type="text" placeholder="Search by recipes, cuisine, category, tags..." class="search-input">
+  <!-- Login Modal -->
+  <div class="modal-overlay" *ngIf="showLoginModal" (click)="closeModals()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModals()">×</button>
+      <div class="modal-content">
+        <h2>Login</h2>
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input 
+            type="email" 
+            id="loginEmail" 
+            placeholder="Email" 
+            [(ngModel)]="loginData.email" 
+            class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <input 
+            type="password" 
+            id="loginPassword" 
+            placeholder="Password" 
+            [(ngModel)]="loginData.password" 
+            class="form-control">
+        </div>
+        <div class="form-actions">
+          <button class="btn primary-btn" (click)="submitLogin()">Login</button>
+          <button class="btn text-btn" (click)="forgotPassword()">Forgot Password?</button>
+        </div>
+        <div class="form-footer">
+          <p>Don't have an account? <button class="link-btn" (click)="openRegisterModal()">Register</button></p>
+        </div>
+      </div>
+    </div>
   </div>
   
-  <div class="auth-buttons" *ngIf="!isLoggedIn">
-    <button class="auth-btn login-btn" (click)="openLoginModal()">Login</button>
-    <button class="auth-btn register-btn" (click)="openRegisterModal()">Register</button>
-  </div>
-  
-  <div class="user-profile" *ngIf="isLoggedIn" (click)="toggleUserMenu()">
-    <img [src]="userProfileImage || 'assets/default-profile.png'" alt="User profile" class="profile-image">
-    <div class="user-menu" *ngIf="showUserMenu">
-      <div class="user-menu-item" (click)="viewProfile()">Profile</div>
-      <div class="user-menu-item" (click)="logout()">Logout</div>
+  <!-- Register Modal -->
+  <div class="modal-overlay" *ngIf="showRegisterModal" (click)="closeModals()">
+    <div class="modal register-modal" (click)="$event.stopPropagation()">
+      <button class="close-btn" (click)="closeModals()">×</button>
+      <div class="modal-content">
+        <h2>Create an Account</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input 
+              type="text" 
+              id="firstName" 
+              [(ngModel)]="registerData.firstName" 
+              placeholder="First name"
+              class="form-control"
+              required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              [(ngModel)]="registerData.lastName" 
+              placeholder="Last name"
+              class="form-control"
+              required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            [(ngModel)]="registerData.email" 
+            placeholder="Email address"
+            class="form-control"
+            required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" [(ngModel)]="registerData.country" class="form-control">
+              <option value="" disabled selected>Select country</option>
+              <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="region">Region</label>
+            <select id="region" [(ngModel)]="registerData.region" class="form-control">
+              <option value="" disabled selected>Select region</option>
+              <option *ngFor="let region of regions" [value]="region">{{region}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            [(ngModel)]="registerData.password" 
+            placeholder="Create a password"
+            class="form-control"
+            required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            [(ngModel)]="registerData.confirmPassword" 
+            placeholder="Confirm your password"
+            class="form-control"
+            required>
+        </div>
+        <div class="form-group profile-image">
+          <label>Profile Image (Optional)</label>
+          <div class="image-upload-container">
+            <button type="button" class="upload-btn" (click)="triggerFileInput()">Choose File</button>
+            <span class="file-name">{{registerData.imageFile ? registerData.imageFile.name : 'No file chosen'}}</span>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn primary-btn" (click)="submitRegistration()">Register</button>
+        </div>
+        <div class="form-footer">
+          <p>Already have an account? <button class="link-btn" (click)="openLoginModal()">Login</button></p>
+        </div>
+      </div>
     </div>
   </div>
 </header>
-
-<!-- Login Modal -->
-<div class="modal-overlay" *ngIf="showLoginModal" (click)="closeModals($event)">
-  <div class="modal login-modal">
-    <h2 class="modal-title">LOGIN</h2>
-    
-    <div class="form-group">
-      <input type="text" placeholder="Username" [(ngModel)]="loginData.username" class="form-control">
-    </div>
-    
-    <div class="form-group">
-      <input type="password" placeholder="Password" [(ngModel)]="loginData.password" class="form-control">
-      <div class="forgot-password">
-        <a href="javascript:void(0)" (click)="forgotPassword()">Forgot password?</a>
-      </div>
-    </div>
-    
-    <div class="modal-actions">
-      <button class="modal-btn login-submit" (click)="submitLogin()">LOGIN</button>
-      <button class="modal-btn cancel" (click)="closeModals()">CANCEL</button>
-    </div>
-  </div>
-</div>
-
-<!-- Register Modal -->
-<div class="modal-overlay" *ngIf="showRegisterModal" (click)="closeModals($event)">
-  <div class="modal register-modal">
-    <h2 class="modal-title">REGISTRATION</h2>
-    
-    <div class="form-row">
-      <div class="form-group half">
-        <input type="text" placeholder="First name" [(ngModel)]="registerData.firstName" class="form-control">
-      </div>
-      <div class="form-group half">
-        <input type="text" placeholder="Last name" [(ngModel)]="registerData.lastName" class="form-control">
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <input type="email" placeholder="Email id" [(ngModel)]="registerData.email" class="form-control">
-    </div>
-    
-    <div class="form-row">
-      <div class="form-group half">
-        <select [(ngModel)]="registerData.country" class="form-control">
-          <option value="" disabled selected>Country</option>
-          <option *ngFor="let country of countries" [value]="country">{{country}}</option>
-        </select>
-      </div>
-      <div class="form-group half">
-        <select [(ngModel)]="registerData.region" class="form-control">
-          <option value="" disabled selected>Region</option>
-          <option *ngFor="let region of regions" [value]="region">{{region}}</option>
-        </select>
-      </div>
-    </div>
-    
-    <div class="form-row">
-      <div class="form-group half">
-        <input type="password" placeholder="Password" [(ngModel)]="registerData.password" class="form-control">
-      </div>
-      <div class="form-group half">
-        <input type="password" placeholder="Confirm Password" [(ngModel)]="registerData.confirmPassword" class="form-control">
-      </div>
-    </div>
-    
-    <div class="form-group upload-group">
-      <label>Upload Image</label>
-      <div class="upload-btn" (click)="triggerFileInput()">
-        <span class="upload-icon">⬆</span>
-      </div>
-      <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept="image/*">
-      <span *ngIf="registerData.imageFile" class="file-name">{{registerData.imageFile.name}}</span>
-    </div>
-    
-    <div class="modal-actions">
-      <button class="modal-btn register-submit" (click)="submitRegistration()">REGISTER</button>
-      <button class="modal-btn cancel" (click)="closeModals()">CANCEL</button>
-    </div>
-  </div>
-</div>

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from './components/header/header.component';
 import { VerticalNavComponent } from './components/vertical-nav/vertical-nav.component';
-import { ContentComponent } from './components/content/content.component';
 import { FooterComponent } from './components/footer/footer.component';
 
 @Component({
@@ -12,11 +11,11 @@ import { FooterComponent } from './components/footer/footer.component';
   standalone: true,
   imports: [
     CommonModule, 
-    RouterOutlet, 
+    RouterOutlet,
+    RouterModule,
     FormsModule,
     HeaderComponent, 
     VerticalNavComponent, 
-    ContentComponent, 
     FooterComponent
   ],
   templateUrl: './app.component.html',

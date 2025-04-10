@@ -1,0 +1,102 @@
+.preferences-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h2 {
+    margin-bottom: 10px;
+  }
+  
+  .subheading {
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .preferences-form {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  
+  .preference-section {
+    margin-bottom: 30px;
+  }
+  
+  .preference-section h3 {
+    margin-bottom: 5px;
+    font-size: 18px;
+  }
+  
+  .preference-section p {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 14px;
+  }
+  
+  .cuisine-options,
+  .dietary-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .cuisine-option,
+  .dietary-option {
+    padding: 8px 15px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .cuisine-option:hover,
+  .dietary-option:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .cuisine-option.selected,
+  .dietary-option.selected {
+    background-color: #0052cc;
+    color: white;
+  }
+  
+  .radio-options,
+  .checkbox-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .radio-option,
+  .checkbox-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .radio-option label,
+  .checkbox-option label {
+    cursor: pointer;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .save-btn {
+    background-color: #00cc52;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .save-btn:hover {
+    background-color: #00a843;
+  }

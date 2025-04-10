@@ -1,0 +1,25 @@
+<div class="my-recipes-container">
+    <h2>Your Recipes</h2>
+    <div class="add-recipe">
+      <button class="add-btn" (click)="addNewRecipe()">Add New Recipe</button>
+    </div>
+    <div class="recipe-grid" *ngIf="userRecipes.length > 0">
+      <div class="recipe-card" *ngFor="let recipe of userRecipes" (click)="viewRecipeDetails(recipe.id)">
+        <div class="recipe-image">
+          <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
+        </div>
+        <div class="recipe-info">
+          <h3 class="recipe-name">{{recipe.name}}</h3>
+          <div class="recipe-category">{{recipe.category}}</div>
+          <div class="recipe-meta">
+            <span class="cooking-time">{{recipe.cookingTime}} min</span>
+            <span class="difficulty">{{recipe.difficultyLevel}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-recipes" *ngIf="userRecipes.length === 0">
+      <p>You haven't created any recipes yet.</p>
+      <button class="add-btn" (click)="addNewRecipe()">Create Your First Recipe</button>
+    </div>
+  </div>

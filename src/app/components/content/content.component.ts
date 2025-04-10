@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Recipe } from '../../models/recipe.model';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-content',
@@ -16,32 +16,32 @@ import { Router } from '@angular/router';
 })
 export class ContentComponent implements OnInit, AfterViewInit {
   @ViewChild('cuisineContainer') cuisineContainer!: ElementRef;
-  
+
   allRecipes: Recipe[] = [];
   displayedRecipes: Recipe[] = [];
   showFilters = false;
   showSortOptions = false;
   selectedCuisine: string = '';
-  
+
   // Slider variables
   cuisineScrollPosition = 0;
   maxScrollPosition = 0;
   scrollAmount = 300;
-  
+
   // Filter variables
   filterCuisine: string = '';
   filterCategory: string = '';
   filterCookingTime: number | null = null;
   filterDifficulty: string = '';
   sortBy: 'popularity' | 'latest' = 'popularity';
-  
+
   cuisines = [
-    'American', 'Italian', 'Spanish', 'Lebanese', 'Chinese', 
+    'American', 'Italian', 'Spanish', 'Lebanese', 'Chinese',
     'Thai', 'Indian', 'French', 'Mexican', 'Mediterranean', 'Japanese'
   ];
-  
+
   categories = [
-    'Breakfast', 'Lunch', 'Dinner', 'Appetizer', 'Dessert', 
+    'Breakfast', 'Lunch', 'Dinner', 'Appetizer', 'Dessert',
     'Snack', 'Soup', 'Salad', 'Main Course', 'Side Dish'
   ];
 
@@ -54,26 +54,26 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.loadRecipes();
-    
+
     // If we don't have any recipes yet, let's create some sample data
     if (this.allRecipes.length === 0) {
       this.createSampleRecipes();
       this.loadRecipes();
     }
   }
-  
+
   ngAfterViewInit(): void {
     // Calculate max scroll position after view is initialized
     setTimeout(() => {
       this.calculateMaxScrollPosition();
     }, 500);
-    
+
     // Recalculate on window resize
     window.addEventListener('resize', () => {
       this.calculateMaxScrollPosition();
     });
   }
-  
+
   calculateMaxScrollPosition(): void {
     if (this.cuisineContainer) {
       const containerWidth = this.cuisineContainer.nativeElement.clientWidth;
@@ -81,18 +81,18 @@ export class ContentComponent implements OnInit, AfterViewInit {
       this.maxScrollPosition = scrollWidth - containerWidth;
     }
   }
-  
+
   slideCuisines(direction: 'prev' | 'next'): void {
     if (!this.cuisineContainer) return;
-    
+
     const container = this.cuisineContainer.nativeElement;
-    
+
     if (direction === 'prev') {
       this.cuisineScrollPosition = Math.max(0, this.cuisineScrollPosition - this.scrollAmount);
     } else {
       this.cuisineScrollPosition = Math.min(this.maxScrollPosition, this.cuisineScrollPosition + this.scrollAmount);
     }
-    
+
     container.scrollLeft = this.cuisineScrollPosition;
   }
 
@@ -109,7 +109,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Main Course',
         cuisine: 'Italian',
         ingredients: ['Pasta', 'Eggs', 'Pancetta', 'Parmesan', 'Black Pepper'],
-        instructions: 'Cook pasta, mix eggs with cheese, combine with hot pasta, add pancetta.',
+        description: 'Cook pasta, mix eggs with cheese, combine with hot pasta, add pancetta.',
+        steps: ['Cook pasta until al dente', 'Mix eggs with grated cheese', 'Combine hot pasta with egg mixture', 'Add cooked pancetta', 'Season with black pepper'],
         cookingTime: 25,
         difficultyLevel: 'Medium',
         userId: 'sample',
@@ -122,7 +123,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Main Course',
         cuisine: 'Indian',
         ingredients: ['Chicken', 'Yogurt', 'Tomato Sauce', 'Spices', 'Cream'],
-        instructions: 'Marinate chicken in yogurt and spices, grill, then simmer in tomato sauce.',
+        description: 'Marinate chicken in yogurt and spices, grill, then simmer in tomato sauce.',
+        steps: ['Marinate chicken in yogurt and spices', 'Grill or bake the marinated chicken', 'Prepare tomato sauce with spices', 'Add grilled chicken to the sauce', 'Simmer and finish with cream'],
         cookingTime: 45,
         difficultyLevel: 'Medium',
         userId: 'sample',
@@ -135,7 +137,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Breakfast',
         cuisine: 'American',
         ingredients: ['Bread', 'Avocado', 'Salt', 'Pepper', 'Lemon Juice'],
-        instructions: 'Toast bread, mash avocado with lemon juice, spread on toast, season.',
+        description: 'Toast bread, mash avocado with lemon juice, spread on toast, season.',
+        steps: ['Toast bread until golden', 'Mash ripe avocado with lemon juice', 'Spread avocado mixture on toast', 'Season with salt and pepper'],
         cookingTime: 10,
         difficultyLevel: 'Easy',
         userId: 'sample',
@@ -148,7 +151,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Main Course',
         cuisine: 'Thai',
         ingredients: ['Rice Noodles', 'Shrimp', 'Tofu', 'Bean Sprouts', 'Peanuts'],
-        instructions: 'Stir-fry noodles with sauce, add proteins and vegetables, garnish with peanuts.',
+        description: 'Stir-fry noodles with sauce, add proteins and vegetables, garnish with peanuts.',
+        steps: ['Soak rice noodles until soft', 'Prepare sauce with tamarind, fish sauce, and sugar', 'Stir-fry proteins and vegetables', 'Add noodles and sauce', 'Garnish with crushed peanuts and lime'],
         cookingTime: 30,
         difficultyLevel: 'Medium',
         userId: 'sample',
@@ -161,7 +165,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Dessert',
         cuisine: 'American',
         ingredients: ['Flour', 'Butter', 'Sugar', 'Chocolate Chips', 'Eggs'],
-        instructions: 'Mix ingredients, form cookies, bake until golden.',
+        description: 'Mix ingredients, form cookies, bake until golden.',
+        steps: ['Cream butter and sugar together', 'Add eggs and vanilla', 'Mix in dry ingredients', 'Fold in chocolate chips', 'Bake until golden brown'],
         cookingTime: 20,
         difficultyLevel: 'Easy',
         userId: 'sample',
@@ -174,7 +179,8 @@ export class ContentComponent implements OnInit, AfterViewInit {
         category: 'Main Course',
         cuisine: 'Mexican',
         ingredients: ['Ground Beef', 'Taco Shells', 'Lettuce', 'Tomato', 'Cheese'],
-        instructions: 'Cook seasoned beef, assemble in shells with toppings.',
+        description: 'Cook seasoned beef, assemble in shells with toppings.',
+        steps: ['Brown ground beef', 'Add taco seasoning and water', 'Simmer until sauce thickens', 'Warm taco shells', 'Assemble with beef and toppings'],
         cookingTime: 25,
         difficultyLevel: 'Easy',
         userId: 'sample',
@@ -214,23 +220,23 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   applyFilters(): void {
     let filteredRecipes = this.allRecipes;
-    
+
     if (this.filterCuisine) {
       filteredRecipes = filteredRecipes.filter(r => r.cuisine === this.filterCuisine);
     }
-    
+
     if (this.filterCategory) {
       filteredRecipes = filteredRecipes.filter(r => r.category === this.filterCategory);
     }
-    
+
     if (this.filterCookingTime) {
       filteredRecipes = filteredRecipes.filter(r => r.cookingTime <= this.filterCookingTime!);
     }
-    
+
     if (this.filterDifficulty) {
       filteredRecipes = filteredRecipes.filter(r => r.difficultyLevel === this.filterDifficulty);
     }
-    
+
     this.displayedRecipes = filteredRecipes;
     this.applySorting();
   }
@@ -239,7 +245,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
     if (this.sortBy === 'popularity') {
       this.displayedRecipes = [...this.displayedRecipes].sort((a, b) => b.rating - a.rating);
     } else {
-      this.displayedRecipes = [...this.displayedRecipes].sort((a, b) => 
+      this.displayedRecipes = [...this.displayedRecipes].sort((a, b) =>
         new Date(b.createdAt || new Date()).getTime() - new Date(a.createdAt || new Date()).getTime()
       );
     }
@@ -256,7 +262,11 @@ export class ContentComponent implements OnInit, AfterViewInit {
     this.applySorting();
   }
 
-  toggleFavorite(recipeId: string): void {
+  // Update the toggleFavorite method to prevent event propagation
+  toggleFavorite(event: Event, recipeId: string): void {
+    // Stop the click event from bubbling up to the recipe card
+    event.stopPropagation();
+
     const currentUser = this.authService.currentUserValue;
     if (currentUser) {
       if (this.isFavorite(recipeId)) {
@@ -275,11 +285,12 @@ export class ContentComponent implements OnInit, AfterViewInit {
   isFavorite(recipeId: string): boolean {
     const currentUser = this.authService.currentUserValue;
     if (!currentUser) return false;
-    
+
     const favorites = this.userService.getFavorites(currentUser.id);
     return favorites.includes(recipeId);
   }
 
+  // Make sure the viewRecipeDetails method is correctly implemented
   viewRecipeDetails(recipeId: string): void {
     this.router.navigate(['/recipe', recipeId]);
   }
@@ -289,5 +300,9 @@ export class ContentComponent implements OnInit, AfterViewInit {
       return (count / 1000).toFixed(1) + 'K';
     }
     return count.toString();
+  }
+  // Add this method to the ContentComponent class
+  navigateTo(route: string): void {
+    this.router.navigate([`/${route}`]);
   }
 }

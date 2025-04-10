@@ -1,33 +1,26 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit {
-  @ViewChild('fileInput') fileInput!: ElementRef;
-  
+export class HeaderComponent {
   @Output() navToggled = new EventEmitter<boolean>();
   
-  isLoggedIn = false;
-  userProfileImage: string | null = null;
-  isNavOpen = false;
-  showUserMenu = false;
-  
-  // Modal controls
   showLoginModal = false;
   showRegisterModal = false;
+  showProfileDropdown = false;
   
-  // Form data
   loginData = {
-    username: '',
+    email: '',
     password: ''
   };
   
@@ -42,66 +35,53 @@ export class HeaderComponent implements OnInit {
     imageFile: null as File | null
   };
   
-  // Sample data for dropdowns
-  countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'India', 'Germany', 'France'];
-  regions = ['North', 'South', 'East', 'West', 'Central'];
-
-  constructor(private authService: AuthService) { }
-
-  ngOnInit(): void {
-    this.authService.currentUser.subscribe(user => {
-      this.isLoggedIn = !!user;
-      this.userProfileImage = user ? 'assets/default-profile.png' : null;
-    });
-  }
-
-  toggleNav(): void {
-    this.isNavOpen = !this.isNavOpen;
-    this.navToggled.emit(this.isNavOpen);
+  countries = ['United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Spain', 'Italy', 'Japan', 'China', 'India', 'Brazil'];
+  regions = ['North', 'South', 'East', 'West', 'Central', 'Northeast', 'Northwest', 'Southeast', 'Southwest'];
+  
+  constructor(
+    public authService: AuthService,
+    private router: Router
+  ) { }
+  
+  get currentUser(): User | null {
+    return this.authService.currentUserValue;
   }
   
-  toggleUserMenu(): void {
-    this.showUserMenu = !this.showUserMenu;
+  toggleNav(): void {
+    this.navToggled.emit(true);
   }
   
   openLoginModal(): void {
     this.showLoginModal = true;
     this.showRegisterModal = false;
-    this.showUserMenu = false;
   }
   
   openRegisterModal(): void {
     this.showRegisterModal = true;
     this.showLoginModal = false;
-    this.showUserMenu = false;
   }
   
-  closeModals(event?: Event): void {
-    // Only close if clicking the overlay, not the modal itself
-    if (event) {
-      const target = event.target as HTMLElement;
-      if (target.classList.contains('modal-overlay')) {
-        this.showLoginModal = false;
-        this.showRegisterModal = false;
-      }
-    } else {
-      this.showLoginModal = false;
-      this.showRegisterModal = false;
-    }
+  closeModals(): void {
+    this.showLoginModal = false;
+    this.showRegisterModal = false;
+  }
+  
+  toggleProfileDropdown(): void {
+    this.showProfileDropdown = !this.showProfileDropdown;
   }
   
   submitLogin(): void {
-    if (this.loginData.username && this.loginData.password) {
-      const success = this.authService.login(this.loginData.username, this.loginData.password);
+    if (this.loginData.email && this.loginData.password) {
+      const success = this.authService.login(this.loginData.email, this.loginData.password);
       if (success) {
         this.closeModals();
         // Reset form
-        this.loginData = { username: '', password: '' };
+        this.loginData = { email: '', password: '' };
       } else {
-        alert('Invalid username or password');
+        alert('Invalid email or password');
       }
     } else {
-      alert('Please enter username and password');
+      alert('Please enter email and password');
     }
   }
   
@@ -119,7 +99,6 @@ export class HeaderComponent implements OnInit {
     
     // Create user object
     const user = {
-      username: this.registerData.email,
       email: this.registerData.email,
       password: this.registerData.password,
       firstName: this.registerData.firstName,
@@ -148,28 +127,40 @@ export class HeaderComponent implements OnInit {
     }
   }
   
+  logout(): void {
+    this.authService.logout();
+    this.showProfileDropdown = false;
+    this.router.navigate(['/']);
+  }
+  
+  navigateToProfile(): void {
+    this.showProfileDropdown = false;
+    // Navigate to profile page
+    // this.router.navigate(['/profile']);
+  }
+  
+  navigateToSettings(): void {
+    this.showProfileDropdown = false;
+    this.router.navigate(['/preferences']);
+  }
+  
   forgotPassword(): void {
-    alert('Password reset functionality will be implemented here');
+    alert('Password reset functionality will be implemented in a future update.');
   }
   
   triggerFileInput(): void {
-    this.fileInput.nativeElement.click();
+    // This would be implemented to trigger a file input click
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.click();
+    }
   }
   
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       this.registerData.imageFile = input.files[0];
+      // In a real app, you'd handle file upload here
     }
-  }
-  
-  viewProfile(): void {
-    // Navigate to profile page
-    this.showUserMenu = false;
-  }
-  
-  logout(): void {
-    this.authService.logout();
-    this.showUserMenu = false;
   }
 }

@@ -1,15 +1,15 @@
 .vertical-nav {
-  background-color: #333;
-  color: white;
-  width: 250px;
-  height: 100%;
   position: fixed;
-  left: -250px;
   top: 0;
-  padding-top: 10px;
+  left: -280px;
+  width: 280px;
+  height: 100vh;
+  background-color: var(--white);
+  box-shadow: var(--shadow);
   transition: left 0.3s ease;
-  z-index: 100;
+  z-index: 200;
   overflow-y: auto;
+  padding-top: 60px;
 }
 
 .vertical-nav.expanded {
@@ -17,36 +17,57 @@
 }
 
 .nav-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 16px;
   display: flex;
   justify-content: flex-end;
-  padding: 0 15px 15px;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .close-btn {
   background: none;
   border: none;
-  color: white;
-  font-size: 24px;
+  font-size: 1.5rem;
   cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
+  color: var(--light-text);
+  transition: var(--transition);
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
 
 .close-btn:hover {
-  color: #ddd;
+  background-color: var(--accent-color);
+  color: var(--text-color);
 }
 
 .nav-item {
-  padding: 15px 20px;
+  padding: 16px 24px;
   cursor: pointer;
-  border-bottom: 1px solid #444;
+  transition: var(--transition);
+  border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .nav-item:hover {
-  background-color: #444;
+  background-color: var(--accent-color);
+  border-left-color: var(--primary-color);
+}
+
+.nav-item span {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  color: var(--light-text);
 }

@@ -1,4 +1,20 @@
 <div class="content-container">
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Discover & Share Amazing Recipes</h1>
+      <p class="hero-subtitle">Explore thousands of delicious recipes from around the world, create your own cookbook, and share your culinary creations.</p>
+      <div class="hero-buttons">
+        <button class="btn btn-primary" (click)="navigateTo('submit-recipe')">Submit Recipe</button>
+        <button class="btn btn-outline" (click)="navigateTo('recommended')">Explore Recipes</button>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="assets/hero-image.png" alt="Delicious Food">
+    </div>
+  </div>
+
+  <!-- Cuisine Filters -->
   <div class="cuisine-filters">
     <div class="cuisine-title">What are your favorite cuisines?</div>
     <div class="cuisine-slider-container">
@@ -18,6 +34,7 @@
     </div>
   </div>
 
+  <!-- Recipes Section -->
   <div class="recipes-section">
     <div class="section-header">
       <h2>Most Popular Dishes</h2>
@@ -57,9 +74,9 @@
         <label>Difficulty level</label>
         <select [(ngModel)]="filterDifficulty" (change)="applyFilters()">
           <option value="">Any difficulty</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
         </select>
       </div>
       
@@ -77,15 +94,15 @@
     </div>
 
     <div class="recipe-grid">
-      <div class="recipe-card" *ngFor="let recipe of displayedRecipes">
+      <div class="recipe-card" *ngFor="let recipe of displayedRecipes" (click)="viewRecipeDetails(recipe.id)">
         <div class="recipe-image">
           <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
-          <button class="favorite-btn" (click)="toggleFavorite(recipe.id)" [class.favorited]="isFavorite(recipe.id)">
+          <button class="favorite-btn" (click)="toggleFavorite($event, recipe.id)" [class.favorited]="isFavorite(recipe.id)">
             <span *ngIf="isFavorite(recipe.id)">❤️</span>
             <span *ngIf="!isFavorite(recipe.id)">♡</span>
           </button>
         </div>
-        <div class="recipe-info" (click)="viewRecipeDetails(recipe.id)">
+        <div class="recipe-info">
           <h3 class="recipe-name">{{recipe.name}}</h3>
           <div class="recipe-category">{{recipe.category}}</div>
           <div class="recipe-meta">

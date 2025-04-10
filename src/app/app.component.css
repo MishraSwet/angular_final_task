@@ -1,14 +1,21 @@
 .app-container {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-content {
-    flex: 1;
-    transition: margin-left 0.3s ease;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+  background-color: #f9fafb;
+}
+
+.main-content.nav-expanded {
+  margin-left: 280px;
+}
+
+@media (max-width: 768px) {
   .main-content.nav-expanded {
-    margin-left: 250px;
+    margin-left: 0;
   }
+}

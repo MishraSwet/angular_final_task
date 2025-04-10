@@ -1,0 +1,22 @@
+<div class="favorites-container">
+    <h2>Your Favorite Recipes</h2>
+    <div class="recipe-grid" *ngIf="favoriteRecipes.length > 0">
+      <div class="recipe-card" *ngFor="let recipe of favoriteRecipes" (click)="viewRecipeDetails(recipe.id)">
+        <div class="recipe-image">
+          <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
+        </div>
+        <div class="recipe-info">
+          <h3 class="recipe-name">{{recipe.name}}</h3>
+          <div class="recipe-category">{{recipe.category}}</div>
+          <div class="recipe-meta">
+            <span class="cooking-time">{{recipe.cookingTime}} min</span>
+            <span class="difficulty">{{recipe.difficultyLevel}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-favorites" *ngIf="favoriteRecipes.length === 0">
+      <p>You haven't added any favorites yet.</p>
+      <button class="browse-btn" (click)="browseCookbook()">Browse Cookbook</button>
+    </div>
+  </div>

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-vertical-nav',
@@ -13,15 +13,14 @@ export class VerticalNavComponent {
   @Input() isExpanded = false;
   @Output() navClosed = new EventEmitter<void>();
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   closeNav(): void {
     this.navClosed.emit();
   }
 
   navigateTo(route: string): void {
-    // Navigation logic
-    // You might want to close the nav after navigation on mobile
+    this.router.navigate([`/${route}`]);
     this.navClosed.emit();
   }
 }
