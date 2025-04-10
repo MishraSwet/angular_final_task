@@ -1,11 +1,10 @@
 <header class="main-header">
   <div class="header-container">
     <div class="header-left">
-      <button class="menu-btn" (click)="toggleNav()">
+      <button class="menu-btn" (click)="toggleNav()" *ngIf="!navIsOpen">
         <span class="menu-icon">☰</span>
       </button>
-      <div class="logo" routerLink="/">
-        <img src="assets/logo.png" alt="Cookbook Logo">
+      <div class="logo" (click)="navigateToHome()">
         <span class="logo-text">Cookbook</span>
       </div>
     </div>
@@ -28,13 +27,13 @@
       <ng-container *ngIf="currentUser">
         <div class="profile-container">
           <button class="profile-btn" (click)="toggleProfileDropdown()">
-            <img [src]="currentUser.profileImage || 'assets/default-profile.png'" alt="Profile" class="profile-img">
+            <span class="profile-icon">👤</span>
             <span class="profile-name">{{ currentUser.firstName }}</span>
           </button>
           
           <div class="profile-dropdown" *ngIf="showProfileDropdown">
             <div class="dropdown-header">
-              <img [src]="currentUser.profileImage || 'assets/default-profile.png'" alt="Profile" class="dropdown-profile-img">
+              <span class="dropdown-profile-icon">👤</span>
               <div class="dropdown-user-info">
                 <div class="dropdown-name">{{ currentUser.firstName }} {{ currentUser.lastName }}</div>
                 <div class="dropdown-email">{{ currentUser.email }}</div>
@@ -168,14 +167,6 @@
             placeholder="Confirm your password"
             class="form-control"
             required>
-        </div>
-        <div class="form-group profile-image">
-          <label>Profile Image (Optional)</label>
-          <div class="image-upload-container">
-            <button type="button" class="upload-btn" (click)="triggerFileInput()">Choose File</button>
-            <span class="file-name">{{registerData.imageFile ? registerData.imageFile.name : 'No file chosen'}}</span>
-            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
-          </div>
         </div>
         <div class="form-actions">
           <button class="btn primary-btn" (click)="submitRegistration()">Register</button>

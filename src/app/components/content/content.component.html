@@ -10,13 +10,21 @@
       </div>
     </div>
     <div class="hero-image">
-      <img src="assets/hero-image.png" alt="Delicious Food">
+      <div class="plate-illustration">
+        <div class="plate">
+          <div class="food food-1"></div>
+          <div class="food food-2"></div>
+          <div class="food food-3"></div>
+          <div class="utensil fork"></div>
+          <div class="utensil knife"></div>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Cuisine Filters -->
   <div class="cuisine-filters">
-    <div class="cuisine-title">What are your favorite cuisines?</div>
+    <h3 class="cuisine-title">What are your favorite cuisines?</h3>
     <div class="cuisine-slider-container">
       <button class="slider-btn slider-prev" (click)="slideCuisines('prev')" [class.disabled]="cuisineScrollPosition <= 0">
         &lt;

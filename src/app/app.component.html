@@ -1,11 +1,10 @@
 <div class="app-container">
-  <app-header (navToggled)="toggleNav($event)"></app-header>
-  <app-vertical-nav 
-    [isExpanded]="isNavExpanded" 
-    (navClosed)="closeNav()">
-  </app-vertical-nav>
-  <div class="main-content" [class.nav-expanded]="isNavExpanded">
+  <app-header (navToggled)="toggleNav($event)" [navIsOpen]="navIsOpen"></app-header>
+  <app-vertical-nav [isExpanded]="navIsOpen" (navClosed)="closeNav()"></app-vertical-nav>
+  
+  <div class="main-content" [class.nav-expanded]="navIsOpen">
     <router-outlet></router-outlet>
   </div>
+  
   <app-footer></app-footer>
 </div>

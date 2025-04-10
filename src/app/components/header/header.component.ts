@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { User } from '../../models/user.model';
 })
 export class HeaderComponent {
   @Output() navToggled = new EventEmitter<boolean>();
+  @Input() navIsOpen = false;
   
   showLoginModal = false;
   showRegisterModal = false;
@@ -48,7 +49,12 @@ export class HeaderComponent {
   }
   
   toggleNav(): void {
+    this.navIsOpen = true;
     this.navToggled.emit(true);
+  }
+  
+  navigateToHome(): void {
+    this.router.navigate(['/']);
   }
   
   openLoginModal(): void {
@@ -146,21 +152,5 @@ export class HeaderComponent {
   
   forgotPassword(): void {
     alert('Password reset functionality will be implemented in a future update.');
-  }
-  
-  triggerFileInput(): void {
-    // This would be implemented to trigger a file input click
-    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-    if (fileInput) {
-      fileInput.click();
-    }
-  }
-  
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.registerData.imageFile = input.files[0];
-      // In a real app, you'd handle file upload here
-    }
   }
 }

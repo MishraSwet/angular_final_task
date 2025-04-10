@@ -49,20 +49,26 @@
   object-fit: contain;
 }
 
+/* Updated cuisine filters styles */
 .cuisine-filters {
-  margin-bottom: 40px;
+  margin: 40px auto;
+  max-width: 1000px;
+  text-align: center;
 }
 
 .cuisine-title {
   font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  text-align: center;
 }
 
 .cuisine-slider-container {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 0 40px;
 }
 
 .cuisine-options {
@@ -73,6 +79,7 @@
   -ms-overflow-style: none;
   padding: 8px 0;
   scroll-behavior: smooth;
+  max-width: 100%;
 }
 
 .cuisine-options::-webkit-scrollbar {
@@ -84,6 +91,8 @@
   flex-direction: column;
   align-items: center;
   cursor: pointer;
+  flex: 0 0 auto;
+  width: 90px;
 }
 
 .cuisine-circle {
@@ -113,14 +122,19 @@
   font-size: 0.85rem;
   font-weight: 500;
   text-align: center;
+  padding: 0 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70px;
 }
 
 .slider-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: var(--white);
   border: 1px solid var(--border-color);
@@ -143,11 +157,26 @@
 }
 
 .slider-prev {
-  left: -20px;
+  left: 0;
 }
 
 .slider-next {
-  right: -20px;
+  right: 0;
+}
+
+@media (max-width: 768px) {
+  .cuisine-option {
+    width: 70px;
+  }
+  
+  .cuisine-circle {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .cuisine-text {
+    max-width: 60px;
+  }
 }
 
 .recipes-section {
@@ -410,5 +439,100 @@
   
   .recipe-grid {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  
+}
+
+.plate-illustration {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plate {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.plate::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  border: 2px solid #f0f0f0;
+}
+
+.food {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.food-1 {
+  width: 60px;
+  height: 60px;
+  background-color: #00cc52;
+  top: 30%;
+  left: 25%;
+}
+
+.food-2 {
+  width: 40px;
+  height: 40px;
+  background-color: #ff6b6b;
+  top: 40%;
+  left: 55%;
+}
+
+.food-3 {
+  width: 30px;
+  height: 30px;
+  background-color: #ffd166;
+  top: 60%;
+  left: 40%;
+}
+
+.utensil {
+  position: absolute;
+  background-color: #e0e0e0;
+}
+
+.fork {
+  width: 10px;
+  height: 80px;
+  border-radius: 4px;
+  bottom: -40px;
+  left: 60px;
+  transform: rotate(-30deg);
+}
+
+.knife {
+  width: 10px;
+  height: 80px;
+  border-radius: 4px;
+  bottom: -40px;
+  right: 60px;
+  transform: rotate(30deg);
+
+  .cuisine-option {
+    width: 70px;
+  }
+  
+  .cuisine-circle {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .cuisine-text {
+    max-width: 60px;
   }
 }

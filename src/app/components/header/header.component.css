@@ -431,3 +431,20 @@
     gap: 16px;
   }
 }
+
+/* Add these styles to header.component.css */
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.profile-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+}
+
+.dropdown-profile-icon {
+  font-size: 1.8rem;
+  margin-right: 12px;
+}
