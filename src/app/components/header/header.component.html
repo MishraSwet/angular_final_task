@@ -1,0 +1,106 @@
+<header class="header">
+  <div class="header-left">
+    <button class="nav-toggle" (click)="toggleNav()">
+      <span class="menu-icon">☰</span>
+    </button>
+    <div class="logo">LOGO</div>
+  </div>
+  
+  <div class="search-container">
+    <input type="text" placeholder="Search by recipes, cuisine, category, tags..." class="search-input">
+  </div>
+  
+  <div class="auth-buttons" *ngIf="!isLoggedIn">
+    <button class="auth-btn login-btn" (click)="openLoginModal()">Login</button>
+    <button class="auth-btn register-btn" (click)="openRegisterModal()">Register</button>
+  </div>
+  
+  <div class="user-profile" *ngIf="isLoggedIn" (click)="toggleUserMenu()">
+    <img [src]="userProfileImage || 'assets/default-profile.png'" alt="User profile" class="profile-image">
+    <div class="user-menu" *ngIf="showUserMenu">
+      <div class="user-menu-item" (click)="viewProfile()">Profile</div>
+      <div class="user-menu-item" (click)="logout()">Logout</div>
+    </div>
+  </div>
+</header>
+
+<!-- Login Modal -->
+<div class="modal-overlay" *ngIf="showLoginModal" (click)="closeModals($event)">
+  <div class="modal login-modal">
+    <h2 class="modal-title">LOGIN</h2>
+    
+    <div class="form-group">
+      <input type="text" placeholder="Username" [(ngModel)]="loginData.username" class="form-control">
+    </div>
+    
+    <div class="form-group">
+      <input type="password" placeholder="Password" [(ngModel)]="loginData.password" class="form-control">
+      <div class="forgot-password">
+        <a href="javascript:void(0)" (click)="forgotPassword()">Forgot password?</a>
+      </div>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="modal-btn login-submit" (click)="submitLogin()">LOGIN</button>
+      <button class="modal-btn cancel" (click)="closeModals()">CANCEL</button>
+    </div>
+  </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal-overlay" *ngIf="showRegisterModal" (click)="closeModals($event)">
+  <div class="modal register-modal">
+    <h2 class="modal-title">REGISTRATION</h2>
+    
+    <div class="form-row">
+      <div class="form-group half">
+        <input type="text" placeholder="First name" [(ngModel)]="registerData.firstName" class="form-control">
+      </div>
+      <div class="form-group half">
+        <input type="text" placeholder="Last name" [(ngModel)]="registerData.lastName" class="form-control">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <input type="email" placeholder="Email id" [(ngModel)]="registerData.email" class="form-control">
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group half">
+        <select [(ngModel)]="registerData.country" class="form-control">
+          <option value="" disabled selected>Country</option>
+          <option *ngFor="let country of countries" [value]="country">{{country}}</option>
+        </select>
+      </div>
+      <div class="form-group half">
+        <select [(ngModel)]="registerData.region" class="form-control">
+          <option value="" disabled selected>Region</option>
+          <option *ngFor="let region of regions" [value]="region">{{region}}</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="form-row">
+      <div class="form-group half">
+        <input type="password" placeholder="Password" [(ngModel)]="registerData.password" class="form-control">
+      </div>
+      <div class="form-group half">
+        <input type="password" placeholder="Confirm Password" [(ngModel)]="registerData.confirmPassword" class="form-control">
+      </div>
+    </div>
+    
+    <div class="form-group upload-group">
+      <label>Upload Image</label>
+      <div class="upload-btn" (click)="triggerFileInput()">
+        <span class="upload-icon">⬆</span>
+      </div>
+      <input type="file" #fileInput style="display: none" (change)="onFileSelected($event)" accept="image/*">
+      <span *ngIf="registerData.imageFile" class="file-name">{{registerData.imageFile.name}}</span>
+    </div>
+    
+    <div class="modal-actions">
+      <button class="modal-btn register-submit" (click)="submitRegistration()">REGISTER</button>
+      <button class="modal-btn cancel" (click)="closeModals()">CANCEL</button>
+    </div>
+  </div>
+</div>

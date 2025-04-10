@@ -1,0 +1,21 @@
+<div class="vertical-nav" [class.expanded]="isExpanded">
+  <div class="nav-header">
+    <button class="close-btn" (click)="closeNav()">×</button>
+  </div>
+  
+  <div class="nav-item" (click)="navigateTo('submit-recipe')">
+    <span>SUBMIT YOUR RECIPE ›</span>
+  </div>
+  <div class="nav-item" (click)="navigateTo('favorites')">
+    <span>VIEW FAVORITES ›</span>
+  </div>
+  <div class="nav-item" (click)="navigateTo('my-recipes')">
+    <span>VIEW YOUR RECIPES ›</span>
+  </div>
+  <div class="nav-item" (click)="navigateTo('recommended')">
+    <span>RECOMMENDED RECIPES ›</span>
+  </div>
+  <div class="nav-item" (click)="navigateTo('preferences')">
+    <span>PREFERENCES ›</span>
+  </div>
+</div>

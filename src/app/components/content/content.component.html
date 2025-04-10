@@ -1,0 +1,112 @@
+<div class="content-container">
+  <div class="cuisine-filters">
+    <div class="cuisine-title">What are your favorite cuisines?</div>
+    <div class="cuisine-slider-container">
+      <button class="slider-btn slider-prev" (click)="slideCuisines('prev')" [class.disabled]="cuisineScrollPosition <= 0">
+        &lt;
+      </button>
+      <div class="cuisine-options" #cuisineContainer>
+        <div class="cuisine-option" *ngFor="let cuisine of cuisines" (click)="selectCuisine(cuisine)" [class.selected]="selectedCuisine === cuisine">
+          <div class="cuisine-circle">
+            <span class="cuisine-text">{{cuisine}}</span>
+          </div>
+        </div>
+      </div>
+      <button class="slider-btn slider-next" (click)="slideCuisines('next')" [class.disabled]="cuisineScrollPosition >= maxScrollPosition">
+        &gt;
+      </button>
+    </div>
+  </div>
+
+  <div class="recipes-section">
+    <div class="section-header">
+      <h2>Most Popular Dishes</h2>
+      <div class="filter-controls">
+        <button class="control-btn filter-btn" (click)="toggleFilters()">
+          <span>Filter</span>
+        </button>
+        <button class="control-btn sort-btn" (click)="toggleSortOptions()">
+          <span>Sort</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="filters-panel" *ngIf="showFilters">
+      <div class="filter-group">
+        <label>Cuisine type</label>
+        <select [(ngModel)]="filterCuisine" (change)="applyFilters()">
+          <option value="">All cuisines</option>
+          <option *ngFor="let cuisine of cuisines" [value]="cuisine">{{cuisine}}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Category</label>
+        <select [(ngModel)]="filterCategory" (change)="applyFilters()">
+          <option value="">All categories</option>
+          <option *ngFor="let category of categories" [value]="category">{{category}}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Cooking time in minutes</label>
+        <input type="number" [(ngModel)]="filterCookingTime" min="0" max="180" (change)="applyFilters()">
+      </div>
+      
+      <div class="filter-group">
+        <label>Difficulty level</label>
+        <select [(ngModel)]="filterDifficulty" (change)="applyFilters()">
+          <option value="">Any difficulty</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+      
+      <div class="sort-options">
+        <div class="sort-title">SORT</div>
+        <div class="sort-radio">
+          <input type="radio" id="popularity" name="sort" value="popularity" [(ngModel)]="sortBy" (change)="applySorting()">
+          <label for="popularity">POPULARITY</label>
+        </div>
+        <div class="sort-radio">
+          <input type="radio" id="latest" name="sort" value="latest" [(ngModel)]="sortBy" (change)="applySorting()">
+          <label for="latest">LATEST</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="recipe-grid">
+      <div class="recipe-card" *ngFor="let recipe of displayedRecipes">
+        <div class="recipe-image">
+          <img [src]="recipe.imageUrl" [alt]="recipe.name" onerror="this.src='assets/recipe-placeholder.jpg'">
+          <button class="favorite-btn" (click)="toggleFavorite(recipe.id)" [class.favorited]="isFavorite(recipe.id)">
+            <span *ngIf="isFavorite(recipe.id)">❤️</span>
+            <span *ngIf="!isFavorite(recipe.id)">♡</span>
+          </button>
+        </div>
+        <div class="recipe-info" (click)="viewRecipeDetails(recipe.id)">
+          <h3 class="recipe-name">{{recipe.name}}</h3>
+          <div class="recipe-category">{{recipe.category}}</div>
+          <div class="recipe-meta">
+            <span class="cooking-time">{{recipe.cookingTime}} min</span>
+            <span class="difficulty">{{recipe.difficultyLevel}}</span>
+          </div>
+          <div class="recipe-rating">
+            <div class="stars">
+              <ng-container *ngFor="let star of [1,2,3,4,5]">
+                <span class="star" [class.filled]="star <= recipe.rating">★</span>
+              </ng-container>
+            </div>
+            <span class="rating-count">{{formatRatingCount(recipe.ratingCount)}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-results" *ngIf="displayedRecipes.length === 0">
+      <p>No recipes found matching your criteria.</p>
+      <button class="reset-btn" (click)="resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+</div>
